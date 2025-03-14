@@ -1,0 +1,19 @@
+Bayesian Approach: 
+
+The distribution of T is modeled by a Binomial:
+
+$T \sim Binom(n = 170, \pi)$
+
+Beta prior: 
+
+The prior for \pi follows:
+
+$\pi \sim Beta(0.700102, 1)$
+
+Posterior for \pi: 
+
+$\pi \sim Beta(8.700102, 163)$
+
+
+The Bayesian confidence interval for $\pi$ is given by [2.32%, 8.8%]
+The confidence interval for $\psi$ is given by [90.4%, 97.6%]
