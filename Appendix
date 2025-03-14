@@ -1,0 +1,22 @@
+#Graphs for Beta-Binomial  
+library(ggplot2)
+
+ggplot() + geom_function(fun = dbeta, 
+                         mapping = aes(color = "prior"),
+                         args = list(shape1 = 0.700102, shape2 = 1),
+                         xlim = c(0,0.3)) +
+  geom_function(fun = dbeta,
+                mapping = aes(color = "posterior"),
+                args = list(shape1 = 8.700102, shape2 = 163),
+                xlim = c(0,0.3) ) +
+  scale_color_manual(name = "dist", values = c("blue", "red")) +
+  labs(title = "Binomial w/ Beta prior",
+       subtitle = "Based on placebo + vaccine data",
+       x = expression(pi), y = "PDF")
+
+#Confidence interval for pi
+int_pi <- qbeta(c(0.025,0.975), shape1 = 8.700102, shape2 = 163)
+
+#Confidence interval for psi
+upper <- (1 - 2*int[1])/(1-int[1])
+lower <- (1 - 2*int[2])/(1-int[2])
