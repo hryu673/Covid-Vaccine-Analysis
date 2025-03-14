@@ -1,0 +1,63 @@
+---
+title: "Stat 342 - Final Draft"
+author: "Jaime Li"
+date: "2025-03-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Let $n$ be the total number of patients with Covid-19 (from the data, $n = 170$). Let $T$ be a binomial random variable expressing the number of patients that have Covid-19 from the vaccine group.
+$$ T \sim Binom(n = 170, \pi), \: \: T_1, T_2, \dots T_{170} \sim Bernulli(\pi)$$
+Where $\pi$ denotes the probability of an infected patient being from the vaccine group. Then: $$\pi = P(\text{Vaccine|Covid-19 Infection}) = \frac{\pi_v \cdot n_v}{\pi_v \cdot n_v - \pi_p\cdot n_p}$$
+Where $\pi_v$ and $\pi_p$ are the probability of a patient being from the vaccine or placebo group, respectively. Additionally, $n_v$ and $n_p$ are the number of infected patients from the vaccine and placebo group, respectively. Since $n_v \approx n_p$, the randomization is 1:1, meaning we can express the function as:
+$$\pi =  \frac{\pi_v }{\pi_v  - \pi_p}$$
+Our parameter of interest, the vaccine efficacy, is given by $\psi = 1 - \frac{\pi_v}{\pi_p} = \frac{\pi_p - \pi_v}{\pi_p}$. Our efficacy formula is also given in terms of $\pi$: $$\psi = \frac{1-2\pi}{1-\pi}$$
+Then $\pi$ can also be written in terms of $\psi$.
+\begin{align*}
+\psi &= \frac{1-2\pi}{1-\pi}\\
+\psi - \pi \cdot\ \psi &= 1-2\pi\\
+- \pi \cdot\ \psi + 2\pi &= 1 - \psi\\
+\pi &= \frac{1 - \psi}{2 - \psi}\\
+\pi &= \frac{\psi - 1}{\psi - 2}
+\end{align*}
+
+The likelihood function of $\psi$ can be expressed as the binomial pdf, given that $\pi = \frac{\psi - 1}{\psi - 2}$. 
+
+$$f(T = t) = L(\psi) = \binom{n}{t} \left(\frac{\psi - 1}{\psi - 2}\right)^t \left( 1 - \frac{\psi - 1}{\psi - 2}\right)^{n-t}$$
+Where $t$ is the observed number of patients in the vaccine group and $n$ is the number of Covid-19 cases. Then the log-likelihood function:
+$$\ell(\psi) = ln\left(\binom{n}{t}\right) + t\:ln\left({\psi - 1}\right) - t \: ln({\psi - 2}) - ({n-t}) \: ln \left( { 2 - \psi}\right)$$
+
+Taking the first derivative of our log-likelihood and finding possible maximums of our log-likelihood function:
+\begin{align*}
+\frac{d}{d\psi} \ell(\psi) &=  \frac{t}{{\psi - 1}} - \frac{t}{{\psi - 2}} + \frac{n-t}{{ 2 - \psi}}\\
+&= \frac{t}{{\psi - 1}} + \frac{t}{{ 2 - \psi}} + \frac{n-t}{{ 2 - \psi}}\\
+&= \frac{t}{{\psi - 1}} + \frac{t}{{ 2 - \psi}} + \frac{n-t}{{ 2 - \psi}}\\
+&= \frac{t}{{\psi - 1}} + \frac{n}{{ 2 - \psi}}
+\end{align*}
+\begin{align*}
+\\
+\frac{t}{{\psi - 1}} + \frac{n}{{ 2 - \psi}} = 0\\
+\frac{-t}{{\psi - 1}} = \frac{n}{{ 2 - \psi}}\\
+n\psi - n = -2t + t\psi\\
+n\psi - t\psi = -2t + n\\
+\psi = \frac{n - 2t}{n - t}
+\end{align*}
+
+This value is a possible maximum of our log-likelihood function. The second derivative test allows us to test the concavity of the function using our given data where $n = 170$ and $t = T_{obs} = 8$: 
+\begin{align*}
+\frac{d^2}{d\psi^2} \ell(\psi) &=   \frac{-t}{(\psi - 1)^2} + \frac{n}{{ (2 - \psi)^2}}\\\\
+\frac{d^2}{d\psi^2} \ell(\hat{\psi}^{mle}) &= \frac{d^2}{d\psi^2} \ell \left(\frac{170 - 2(8)}{170 - 8} \right) =   \frac{-8}{\left(\left(\frac{154}{162}\right) - 1\right)^2} + \frac{170}{{ \left(2 - \left(\frac{154}{162}\right)\right)^2}} = -3126.124
+\end{align*}
+Thus our critical point is a local maximum. Then:
+$$\hat{\psi}^{mle} = \frac{n - 2T}{n - T} = \frac{154}{162}$$
+
+**The Large Sample Confidence Interval**  
+Based on Theorem 12.1 (slide deck), the 95% large confidence interval of $\hat{\psi}^{mle}$, under certain regularity conditions, is equal to:
+$$\hat{\psi}^{mle} \pm z_{0.975} \sqrt{\frac{1}{n\:I(\hat{\psi}^{mle})}}$$
+Where $I(\hat{\psi}^{mle})$ is the expected Fisher Information, equal to:
+$$I(\hat{\psi}^{mle}) = E\left[\frac{-d^2}{d\psi^2} ln(f_{\psi}(t))\right]_{\psi = \hat{\psi}^{mle}} = \frac{E[T]}{\psi - 1} - \frac{n}{2-\psi} = \frac{n\pi}{\psi - 1} - \frac{n}{2-\psi}$$
+Where $\pi$ is $\pi$ given that $\psi = \hat{\psi}^{mle}$. Then $I(\hat{\psi}^{mle}) \approx 3126.124$. Our large sample confidence interval is then:
+$$\hat{\psi}^{mle} \pm z_{0.975} \sqrt{\frac{1}{n\:I(\hat{\psi}^{mle})}} \approx \big[0.9479, 0.9518\big]$$
