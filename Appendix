@@ -1,4 +1,5 @@
-#Graphs for Beta-Binomial  
+Graphs for Beta-Binomial  
+```{r}
 library(ggplot2)
 
 ggplot() + geom_function(fun = dbeta, 
@@ -13,10 +14,34 @@ ggplot() + geom_function(fun = dbeta,
   labs(title = "Binomial w/ Beta prior",
        subtitle = "Based on placebo + vaccine data",
        x = expression(pi), y = "PDF")
+```
 
-#Confidence interval for pi
+Confidence interval for pi
+```{r}
 int_pi <- qbeta(c(0.025,0.975), shape1 = 8.700102, shape2 = 163)
+```
 
-#Confidence interval for psi
+Confidence interval for psi
+```{r}
 upper <- (1 - 2*int[1])/(1-int[1])
 lower <- (1 - 2*int[2])/(1-int[2])
+``` 
+
+Bayesian For calculating the P-value:
+```{r}
+alpha_prior <- 0.700102
+beta_prior <- 1
+
+X_v <- 8   
+X_p <- 162 
+
+alpha_posterior <- alpha_prior + X_v
+beta_posterior <- beta_prior + X_p
+
+psi_threshold <- 0.30
+pi_threshold <- (1 - psi_threshold) / (2 - psi_threshold)
+
+p_value_psi <- pbeta(pi_threshold, alpha_posterior, beta_posterior, lower.tail = F)
+
+print(p_value_psi)
+```
