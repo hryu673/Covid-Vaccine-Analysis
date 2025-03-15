@@ -10,8 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(fastR2)
 ```
 
-# 4 Statisical Methods 
-In this study, we applied two main statistical methods, Likelihood and Bayesian inference, to analyse our parameter of interest. Our parameter of interest is the vaccine efficacy rate of the BNT162b2 vaccine for the Covid-19 virus, denoted $\psi$ for this paper. Vaccine efficacy is the percentage decrease in the chance of being infected by Covid-19 given the vaccine compared to the placebo group. The FDA requires an efficacy rate of at least 30% before vaccines can be approved. 
+# 4) Statisical Methods 
+In this study, we applied two main statistical methods, Likelihood and Bayesian inference, to analyse our parameter of interest. Our parameter of interest is the vaccine efficacy rate of the BNT162b2 vaccine for the Covid-19 virus, denoted $\psi$ for this paper. Vaccine efficacy is the percentage decrease in the chance of being infected by Covid-19 given the vaccine compared to the placebo group. The FDA requires an efficacy rate of at least 30% before vaccines can be approved. Our data is from Pfizer and BioNTech, the producers of the vaccine. 
 
 \begin{table}[h!]
 \centering
@@ -63,7 +63,7 @@ n\psi - t\psi = -2t + n\\
 This value is a possible maximum of our log-likelihood function. The second derivative test allows us to test the concavity of the function using our given data where $n = 170$ and $t = T_{obs} = 8$: 
 \begin{align*}
 \frac{d^2}{d\psi^2} \ell(\psi) &=   \frac{-t}{(\psi - 1)^2} + \frac{n}{{ (2 - \psi)^2}}\\\\
-\frac{d^2}{d\psi^2} \ell(\hat{\psi}^{mle}) &= \frac{d^2}{d\psi^2} \ell \left(\frac{170 - 2(8)}{170 - 8} \right) =   \frac{-8}{\left(\left(\frac{154}{162}\right) - 1\right)^2} + \frac{170}{{ \left(2 - \left(\frac{154}{162}\right)\right)^2}} = -3126.124
+\frac{d^2}{d\psi^2} \ell\left(\psi = \frac{n - 2t}{n - t}\right) &= \frac{d^2}{d\psi^2} \ell \left(\frac{170 - 2(8)}{170 - 8} \right) =   \frac{-8}{\left(\left(\frac{154}{162}\right) - 1\right)^2} + \frac{170}{{ \left(2 - \left(\frac{154}{162}\right)\right)^2}} = -3126.124
 \end{align*}
 Thus our critical point is a local maximum. Thus:
 $$\hat{\psi}^{mle} = \frac{n - 2T}{n - T}$$
@@ -84,7 +84,7 @@ The key regularity and size assumptions we must consider are\footnote{Slide deck
 3) The sample size is significantly large. Our sample size is 170.  
 
 
-**Bootstrapping Confidence Interval**
+**Bootstrap Confidence Interval**  
 The MLE of $\pi$ based on the dataset is $\frac{8}{170}$, we then use this $\pi$ to generate 1000 samples and find $\psi$ for each sample. The value of first and last 2.5% of $\psi$ is Bootstrap percentile 95% confidence interval.
 
 **P-Value Based on the Likelihood Ratio Test Statistic**  
@@ -94,7 +94,7 @@ Our test statistic is the Likelihood Ratio Test Statistic, denoted:
 $$W = 2ln\left(\frac{L(\hat{\psi}_0)}{L({\psi}_0^{null} = 0.3)} \right) \sim \chi^2_1$$
 
 **Empirical P-Value**  
-The empirical p-value was calculated based on a large number of randomly generated samples generated based on the parameters of the null hypothesis. The empirical p-value is equal to the percentage of the generated samples that have a Likelihood Ratio p-value as significant or more significant than the p-value from our original data. 
+The empirical p-value was calculated based on a large number of randomly generated samples generated with the parameters outlined by the null hypothesis ($\psi_0 = 0.3$). The empirical p-value is equal to the percentage of the generated samples that have a Likelihood Ratio p-value as significant or more significant than the p-value from our original data. 
 
 ## 4.2 Bayesian Inference
 
@@ -124,7 +124,7 @@ plot(ml.binom) +
 ```
 
 
-The Bootstrap percentile 95% confidence interval is [0.9102564	0.9820359]\footnote{See appendix 8.x for code}. 
+The Bootstrap percentile 95% confidence interval is [0.9102564	0.9820359]\footnote{See appendix 8.x for R code}. 
 
 For our p-value based on the Likelihood Ratio Test Statistic, the value of test statistic, given that $\hat{\psi}^{mle} = \frac{154}{162}$, is $W \approx 121.6012$ and our p-value was \footnote{See appendix 8.x for R code.}:
 $$W = 2ln\left(\frac{L(\hat{\psi}_0)}{L({\psi}_0^{null} = 0.3)} \right)\approx121.6012 \sim \chi^2_1$$
