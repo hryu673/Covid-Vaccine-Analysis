@@ -1,0 +1,122 @@
+---
+title: "Your Paper Title Here"
+author: "Your Name(s)"
+date: Date
+output: pdf_document
+urlcolor: blue
+header-includes:
+- \usepackage{amsmath,amsfonts,amssymb}
+- \usepackage{setspace} \doublespacing
+fontsize: 11pt
+---
+
+```{r setup, include=FALSE}
+#Use this code chunk to include libraries, and set global options.
+```
+
+# Abstract
+Write your abstract here.
+
+# Keywords
+*Keyword 1*, *Keyword 2*, *Keyword 3*, *Keyword 4*
+
+\newpage
+
+# Introduction / Background
+Provide an introduction with background information.
+COVID-19 is a contagious disease caused by the coronavirus SARS-CoV-2. Several COVID-19 vaccines have been approved and distributed in various countries, many of which have initiated mass vaccination campaigns. In December 2020, Pfizer and BioNTech successfully obtained a US FDA Emergency Use Authorization (EUA) to begin distributing their two-dose vaccine (BNT162b2). BNT162b2(Pfizer–BioNTech COVID-19 vaccine) utilizes mRNA technology to stimulate an immune response. About 649 million doses of the Pfizer–BioNTech COVID-19 vaccine, including about 55 million doses in children and adolescents (below 18 years of age) were administered in the EU/EEA from authorization to 26 June 2022. To this day, there are still some people still question the effectiveness of the vaccine. The FDA requires at least 30% vaccine efficacy for a vaccine to be approved. Vaccine Efficacy shows how vaccine reduces the risk of getting COVID-19.
+The experiment is a placebo-controlled, double-blinded randomized trial, enrolling participants aged 16 and older. Participants were randomly assigned in a 1:1 ratio to receive either two doses of BNT162b2 or a placebo, administered 21 days apart. The primary efficacy endpoint was laboratory-confirmed COVID-19 infection, with a total of 170 cases observed across the study groups. The reported vaccine efficacy was estimated at 95%, with a Bayesian credible interval of [90.3%, 97.6%], indicating a strong effect.
+```{r echo=FALSE}
+library(tibble)
+library(ggplot2)
+# Create a tibble
+vaccine_data <- tibble(
+  Group = c("BNT162b2", "Placebo", "Total"),
+  Cases = c(8, 162, 170),
+  Sample_Size = c(17411, 17511, 34922)
+)
+
+# Print the tibble
+print(vaccine_data)
+```
+
+```{r echo=FALSE}
+groups <- c("BNT162b2", "Placebo")
+cases <- c(8, 162)
+sample_sizes <- c(17411, 17511)
+
+df <- data.frame(
+  Group = rep(groups, each = 2),
+  Category = rep(c("Infected Cases", "No Infection"), times = 2),
+  Percentage = c(8/17411, 1-8/17411, 162/17511, 1-162/17511)
+)
+
+# Create the segmented bar plot
+ggplot(df, aes(x = Group, y = Percentage, fill = Category)) +
+  geom_bar(stat = "identity", position = "stack") +
+  ggtitle("Percentage of COVID-19 Cases in Vaccine and Placebo Groups") +
+  xlab("Group") +
+  ylab("Percentage") +
+  theme_minimal()
+```
+Given the significance of this vaccine in controlling the pandemic, our report aims to analyze the clinical trial data using both Bayesian and Frequentist statistical methods. Statistical models assessing vaccine efficacy play a crucial role in guiding public health decisions. The replication and evaluation(Bayesian & Frequentist methods) of Pfizer’s clinical trial data through alternative statistical frameworks help reinforce confidence in the robustness of vaccine efficacy estimates and their implications for global vaccination strategies.
+The goal of our report is to critically assess the statistical modeling in clinical trials and to understand how different methods may influence public health decision-making.
+```{r label="important_R_code", eval=TRUE, echo=FALSE}
+# You can reference your code in the appendix (sample here).
+```
+
+# Statistical Methods
+MLE of $\pi$ based on the dataset is $\frac{8}{170}$, and then we use this $\pi$ to generate 1000 samples to find $\psi$ for each sample. The value of first and last 2.5% of $\psi$ is Bootstrap pencentile 95% confidence interval.
+
+## Model
+Describe the statistical model used.
+
+## Likelihood Inference
+Detail the likelihood approach.
+
+## Bayesian Inference
+Detail the Bayesian approach.
+
+# Results
+Bootstrap pencentile 95% confidence interval is [0.9102564	0.9820359	]
+
+# Discussion / Conclusion
+Discuss / conclude here.
+
+# Bibliography
+
+Brown, B. (2024). *Lecture Title*. Lecture slides, Course Name, University Name.
+
+Doe, J. (2020). Title of the Paper. *Journal Name*, 12(3), 45-67.
+
+Last, F., & Last, F. (2025). *Book Title*. Publisher.
+
+Smith, A., & Johnson, C. (2023). *Title of the Online Article*. Retrieved from https://www.example.com.
+
+C4591001 Clinical Trial Group. (2021). Safety and Efficacy of the BNT162b2 mRNA Covid-19 Vaccine through 6 Months. *The New England Journal of Medicine*, VOL.385, NO.19. Retrieved from https://www.nejm.org/doi/full/10.1056/NEJMoa2110345
+
+WikiPedia.*Pfizer–BioNTech COVID-19 vaccine*. Retrieved from https://en.wikipedia.org/wiki/Pfizer%E2%80%93BioNTech_COVID-19_vaccine
+# Appendix
+```{r}
+library(tibble)
+library(tidyverse)
+set.seed(123)
+pi_mle <- 8/170
+boot1 <- tibble(
+  psi_mle = replicate(1000, expr = {
+    samples <- rbinom(1, 170, pi_mle)
+    est_psi <- (170-2*samples)/(170-samples)
+    return(est_psi)
+  })
+)
+boot1 %>% summarise(lower = quantile(psi_mle, 0.025),
+                    upper = quantile(psi_mle, 0.975))
+```
+
+
+## Code
+```{r ref.label = "important_R_code", eval=FALSE}
+```
+
+## Proofs
+If applicable, include detailed mathematical derivations or additional theoretical explanations.
