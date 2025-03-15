@@ -1,0 +1,217 @@
+---
+title: "Likelihood All Sections"
+author: "Jaime Li"
+date: "2025-03-15"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(fastR2)
+```
+
+# 4 Statisical Methods 
+In this study, we applied two main statistical methods, Likelihood and Bayesian inference, to analyse our parameter of interest. Our parameter of interest is the vaccine efficacy rate of the BNT162b2 vaccine for the Covid-19 virus, denoted $\psi$ for this paper. Vaccine efficacy is the percentage decrease in the chance of being infected by Covid-19 given the vaccine compared to the placebo group. The FDA requires an efficacy rate of at least 30% before vaccines can be approved. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{c|c|c}
+\textbf{Group} & \textbf{Cases} & \textbf{Sample Size} \\ \hline
+BNT162b2 & 8 & 17,411 \\ 
+Placebo & 162 & 17,511 \\ \hline
+Total & 170 & 34,922 \\ 
+\end{tabular}
+\caption{Vaccine Efficacy against Covid-19 at least 7 days
+after second dose in patients without evidence of infection, from Pfizer and BioNTech}
+\end{table}
+
+## 4.1 Likelihood Inference  
+Let $n$ be the total number of patients with Covid-19 (from the data, $n$ is equal to 170). Let $T$ be a binomial random variable expressing the number of patients that have Covid-19 that are from the vaccine group.
+$$ T \sim Binom(n = 170, \pi)$$
+
+Where $\pi$ denotes the probability of an infected patient being from the vaccine group. Then: $$\pi = P(\text{Vaccine|Covid-19 Infection}) = \frac{\pi_v \cdot n_v}{\pi_v \cdot n_v - \pi_p\cdot n_p}$$
+Where $\pi_v$ and $\pi_p$ are the probability of a patient being from the vaccine or placebo group, respectively. Additionally, $n_v$ and $n_p$ are the number of infected patients from the vaccine and placebo group, respectively. Since $n_v \approx n_p$, the randomization is 1:1, meaning we can express the function as:
+$$\pi =  \frac{\pi_v }{\pi_v  - \pi_p}$$
+Our parameter of interest, the vaccine efficacy, is given by $\psi = 1 - \frac{\pi_v}{\pi_p} = \frac{\pi_p - \pi_v}{\pi_p}$. Note that the range of $\psi = (-\infty, 1)$. Our efficacy formula is also given in terms of $\pi$: $$\psi = \frac{1-2\pi}{1-\pi}$$
+Note that $\pi$ can then be written in terms of $\psi$\footnote{See appendix 8.1 for calculations.}.
+\begin{align*}
+\pi &= \frac{\psi - 1}{\psi - 2}
+\end{align*} 
+
+The likelihood function of $\psi$ can be expressed using the pdf of $T$, given that $\pi = \frac{\psi - 1}{\psi - 2}$. 
+
+$$f(T = t) = L(\psi) = \binom{n}{t} \left(\frac{\psi - 1}{\psi - 2}\right)^t \left( 1 - \frac{\psi - 1}{\psi - 2}\right)^{n-t}$$
+Where $t$ is the observed number of patients in the vaccine group and $n$ is the number of Covid-19 cases. Then the log-likelihood function:
+$$\ell(\psi) = ln\left(\binom{n}{t}\right) + t\:ln\left({\psi - 1}\right) - t \: ln({\psi - 2}) - ({n-t}) \: ln \left( { 2 - \psi}\right)$$
+
+In order to identify the possible maximums of our log-likelihood function, we took the first derivative of our log-likelihood with repects to the parameter of interest, $\psi$, and found the root(s) of the equation.
+\begin{align*}
+\frac{d}{d\psi} \ell(\psi) &=  \frac{t}{{\psi - 1}} - \frac{t}{{\psi - 2}} + \frac{n-t}{{ 2 - \psi}}\\
+&= \frac{t}{{\psi - 1}} + \frac{t}{{ 2 - \psi}} + \frac{n-t}{{ 2 - \psi}}\\
+&= \frac{t}{{\psi - 1}} + \frac{t}{{ 2 - \psi}} + \frac{n-t}{{ 2 - \psi}}\\
+&= \frac{t}{{\psi - 1}} + \frac{n}{{ 2 - \psi}}
+\end{align*}
+\begin{align*}
+\\
+\frac{t}{{\psi - 1}} + \frac{n}{{ 2 - \psi}} = 0\\
+\frac{-t}{{\psi - 1}} = \frac{n}{{ 2 - \psi}}\\
+n\psi - n = -2t + t\psi\\
+n\psi - t\psi = -2t + n\\
+\psi = \frac{n - 2t}{n - t}
+\end{align*}
+
+This value is a possible maximum of our log-likelihood function. The second derivative test allows us to test the concavity of the function using our given data where $n = 170$ and $t = T_{obs} = 8$: 
+\begin{align*}
+\frac{d^2}{d\psi^2} \ell(\psi) &=   \frac{-t}{(\psi - 1)^2} + \frac{n}{{ (2 - \psi)^2}}\\\\
+\frac{d^2}{d\psi^2} \ell(\hat{\psi}^{mle}) &= \frac{d^2}{d\psi^2} \ell \left(\frac{170 - 2(8)}{170 - 8} \right) =   \frac{-8}{\left(\left(\frac{154}{162}\right) - 1\right)^2} + \frac{170}{{ \left(2 - \left(\frac{154}{162}\right)\right)^2}} = -3126.124
+\end{align*}
+Thus our critical point is a local maximum. Thus:
+$$\hat{\psi}^{mle} = \frac{n - 2T}{n - T}$$
+
+**The Large Sample Confidence Interval**  
+Based on Theorem 12.1 \footnote{ Slide deck "likelihood-inference" from Stat 342, Grove, Ranjini}, the 95% large confidence interval of $\hat{\psi}^{mle}$, under certain regularity conditions, is equal to:
+$$\hat{\psi}^{mle} \pm z_{0.975} \sqrt{\frac{1}{n\:I(\hat{\psi}^{mle})}}$$
+Where $I(\hat{\psi}^{mle})$ is the expected Fisher Information, equal to:
+$$I(\hat{\psi}^{mle}) = E\left[\frac{-d^2}{d\psi^2} ln(f_{\psi}(t))\right]_{\psi = \hat{\psi}^{mle}}  = \frac{n\pi}{\psi - 1} - \frac{n}{2-\psi} = \frac{t}{\psi - 1} - \frac{n}{2-\psi}$$
+Where $\pi$ is the rate of vaccine patients given that $\psi = \hat{\psi}^{mle}$. Our large sample confidence interval is then:
+$$\hat{\psi}^{mle} \pm z_{0.975} \sqrt{\frac{1}{\frac{t}{\hat{\psi}^{mle} - 1} - \frac{n}{2-\hat{\psi}^{mle}}}}$$ 
+The key regularity and size assumptions we must consider are\footnote{Slide deck "likelihood-inference" from Stat 342, Grove, Ranjini}:
+
+1) The possible values of $t$ are not dependent on the parameter $\psi$, which is true since the possible values of $t$ relies on the size of the binomial.
+
+2) The true value of the parameter does not fall on the boundaries. This is also true since the range of $\psi = (-\infty, 1)$, meaning it does not have set boundaries. 
+
+3) The sample size is significantly large. Our sample size is 170.  
+
+
+**Bootstrapping Confidence Interval**
+The MLE of $\pi$ based on the dataset is $\frac{8}{170}$, we then use this $\pi$ to generate 1000 samples and find $\psi$ for each sample. The value of first and last 2.5% of $\psi$ is Bootstrap percentile 95% confidence interval.
+
+**P-Value Based on the Likelihood Ratio Test Statistic**  
+The p-value calculation is based off our null and alternative hypotheses where our null hypothesis assumes that the efficacy is the FDA's required 30% while the alternative suggests that the true rate is not equal to 30%, but rather higher. Thus higher values of $\psi$ support the alternative hypothesis.
+$$H_0: \psi_0 = 0.3, \: \: H_1: \psi_0 \neq 0.3$$
+Our test statistic is the Likelihood Ratio Test Statistic, denoted:
+$$W = 2ln\left(\frac{L(\hat{\psi}_0)}{L({\psi}_0^{null} = 0.3)} \right) \sim \chi^2_1$$
+
+**Empirical P-Value**  
+The empirical p-value was calculated based on a large number of randomly generated samples generated based on the parameters of the null hypothesis. The empirical p-value is equal to the percentage of the generated samples that have a Likelihood Ratio p-value as significant or more significant than the p-value from our original data. 
+
+## 4.2 Bayesian Inference
+
+# 5 Results 
+## 5.1 Results from Likelihood Methods  
+The maximum-likelihood estimate of the parameter $\psi$ given the data is approximately 0.9506, based on the equations in section 4.1.  
+$$\hat{\psi}^{mle} = \frac{154}{162} \approx 0.9506$$
+And the 95% large sample confidence interval (the Wald Confidence Interval) is:
+$$0.9506 \pm z_{0.975} \sqrt{\frac{1}{\frac{8}{0.9506 - 1} - \frac{170}{2-0.9506}}} \approx \big[0.9156, 0.9857\big]$$
+Second-order approximation plot\footnote{See appendix 8.x for R code.}:
+
+```{r, warning = F, echo = F}
+loglik.binom <- function(psi, x, n){ 
+  if (psi >= 1) {
+    return(NA)
+  }
+  pi <- (psi - 1) / (psi - 2)
+  return(log(choose(n, x)) + x*log(pi) + (n-x)*log(1-pi))
+}
+
+ml.binom <- maxLik2(loglik=loglik.binom,
+                    start = 0.3, x = 8, n = 170)
+
+plot(ml.binom) +
+  labs(x = expression(psi),
+       title = "Second Order Taylor approximation to Binomial t = 8, n = 170")
+```
+
+
+The Bootstrap percentile 95% confidence interval is [0.9102564	0.9820359]\footnote{See appendix 8.x for code}. 
+
+For our p-value based on the Likelihood Ratio Test Statistic, the value of test statistic, given that $\hat{\psi}^{mle} = \frac{154}{162}$, is $W \approx 121.6012$ and our p-value was \footnote{See appendix 8.x for R code.}:
+$$W = 2ln\left(\frac{L(\hat{\psi}_0)}{L({\psi}_0^{null} = 0.3)} \right)\approx121.6012 \sim \chi^2_1$$
+$$P(W \geq 121.6012) = 2.822294 \times 10^{-28}$$
+
+The empirical p-value generated from a random sample\footnote{See appendix 8.x for R code.} was equal to 0, meaning out of the 1500 samples based on the null hypothesis, there were no samples that had a test statistic as significant or more than the one we obtained from the data. 
+
+# 8 Appendix 
+8.x) Extended Calculation for $\pi$ in Terms of $\psi$
+\begin{align*}
+\psi &= \frac{1-2\pi}{1-\pi}\\
+\psi - \pi \cdot\ \psi &= 1-2\pi\\
+- \pi \cdot\ \psi + 2\pi &= 1 - \psi\\
+\pi &= \frac{1 - \psi}{2 - \psi}\\
+\pi &= \frac{\psi - 1}{\psi - 2}
+\end{align*}
+
+8.x) Code Second-Order Plot
+```{r, warning = T, eval = F}
+loglik.binom <- function(psi, x, n){ 
+  if (psi >= 1) {
+    return(NA)
+  }
+  pi <- (psi - 1) / (psi - 2)
+  return(log(choose(n, x)) + x*log(pi) + (n-x)*log(1-pi))
+}
+
+ml.binom <- maxLik2(loglik=loglik.binom,
+                    start = 0.3, x = 8, n = 170)
+
+plot(ml.binom) +
+  labs(x = expression(psi),
+       title = "Second Order Taylor approximation to Bernulli t = 8, n = 170")
+```
+
+8.x) Code for Bootstrap Interval 
+```{r, eval = F}
+set.seed(123)
+pi_mle <- 8/170
+boot1 <- tibble(
+  psi_mle = replicate(1000, expr = {
+    samples <- rbinom(1, 170, pi_mle)
+    est_psi <- (170-2*samples)/(170-samples)
+    return(est_psi)
+  })
+)
+
+boot1 %>% summarise(lower = quantile(psi_mle, 0.025),
+                    upper = quantile(psi_mle, 0.975))
+```
+
+8.x) Code for Calculating the Likelihood ratio P-Value
+```{r, eval = F}
+# likelihood function values 
+psi_mle <- 154/162
+psi_null <- 0.3
+pi1 <- (psi_mle-1)/(psi_mle-2)
+pi2 <- (psi_null-1)/(psi_null-2)
+w <- 2 * log(dbinom(8, 170, pi1)/dbinom(8, 170, pi2))
+
+lr_p_value <- pchisq(w, df = 1, lower.tail = FALSE ) # output = 2.822294e-28
+```
+
+8.x) Code for Generating the Empirical P-Value
+```{r, eval = F}
+# Here is the log.lik of the binomial based on psi for reference
+loglik.binom <- function(psi, x, n){ 
+  if (psi >= 1) {
+    return(NA)
+  }
+  pi <- (psi - 1) / (psi - 2)
+  return(log(choose(n, x)) + x*log(pi) + (n-x)*log(1-pi))
+}
+
+# set seed for reproducibility 
+set.seed(101)
+w_vec <- c()
+B <- 1500
+psi_null <- 0.3
+pi <- (psi_null-1)/(psi_null-2)
+
+for(i in 1:B) {
+  sample <- rbinom(1, size = 170, prob = pi)
+  w_vec[i] <- (2 * loglik.binom(psi_mle, x = sample, n = 170)) - 
+    (2 * loglik.binom(0.3, x = sample, n = 170))
+}
+
+# emp p-value
+emp_p_value <- mean(w_vec >= w) # output = 0
+```
