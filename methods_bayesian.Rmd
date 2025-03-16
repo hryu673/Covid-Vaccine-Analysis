@@ -1,0 +1,135 @@
+---
+title: "Statistical Methods - Bayesian"
+output: pdf_document
+date: "2025-03-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 4.2 Bayesian Inference
+
+Another point of reference can be done using Bayesian inference. We analyze our data under the beta-binomial framework. Compared to the Frequentist approach, we can treat $\pi_v$ and $\pi_p$ as fixed unknowns, and utilize Bayesian inference to model them as random variables.  
+
+Vaccine efficacy, previously defined as: 
+
+$$\psi = \frac{\pi_p - \pi_v}{\pi_p}$$
+Where:
+
+  - $\pi_v$ is the probability of infection in the vaccine group
+  - $\pi_p$ is the proabability of infection in the placebo group
+  
+And using the reparametrization representing the infections occurring in the vaccine group relative to both groups:
+$$\pi = \frac{\pi_v}{\pi_v + \pi_p}$$
+
+Recall that we model the total number of infections across both groups as:
+
+$$T \sim Binom(n = 170, \pi)$$
+Where:
+
+  - T = 8 (number of infections in the vaccine group)
+  - n = 170 (total infections in both groups)
+
+The prior for $\pi$ is defined as ($\alpha_0$ and $\beta_0$ established from previous studies):
+
+  $$\pi \sim Beta(0.700102, 1)$$
+
+### Computing the Posterior for $\pi$: 
+
+We know the beta is a conjugate prior in the binomial model. Therefore, we know the posterior distribution of $\pi$ is also a beta distribution.
+
+\begin{align*}
+  \pi \mid t &\sim \text{Beta}(\alpha_0 + T, \beta_0 + (n - T)) \\
+  \pi \mid t &\sim \text{Beta}(0.700102 + 8, 1 + 162) \\
+  \pi \mid t &\sim \text{Beta}(8.700102, 163) \hspace{1.5cm} \text{(Posterior)}
+\end{align*}
+
+```{r, echo = FALSE}
+
+library(ggplot2)
+
+ggplot() + geom_function(fun = dbeta, 
+                         mapping = aes(color = "prior"),
+                         args = list(shape1 = 0.700102, shape2 = 1),
+                         xlim = c(0,0.3)) +
+  geom_function(fun = dbeta,
+                mapping = aes(color = "posterior"),
+                args = list(shape1 = 8.700102, shape2 = 163),
+                xlim = c(0,0.3) ) +
+  scale_color_manual(name = "dist", values = c("blue", "red")) +
+  labs(title = "Binomial w/ Beta prior",
+       subtitle = "Based on placebo + vaccine data",
+       x = expression(pi), y = "PDF") 
+```
+
+
+
+### Point estimate for $\pi$ (Median):
+We compute the posterior median of $\pi$ as a point estimate, which is calculated numerically \footnote{using qbeta()}:
+
+$$\pi_{median} = 0.04893234$$
+
+### Interval for $\pi$:
+
+A Bayesian interval estimate of $\pi$ is analogous to a Frequentist confidence interval. We can compute this posterior interval based on: 
+
+$$P(a \leq \pi \leq b \mid t) = 1 - \alpha$$
+And calculate a and b for: 
+
+$$P(a \leq \pi \leq b \mid t) = 0.95 $$
+
+Where [a,b] represents the Bayesian interval for $\pi$.
+
+\
+
+### Translating $\pi$ back to $\psi$:
+
+Since the main parameter of interest of this study is the vaccine efficacy rate, or $\psi$, we can translate the summaries (median, Bayesian interval) of $\pi$ back to $\psi$ using:
+
+Using $\pi_{median} = 0.04893234$, we can say that 
+
+$$P(\pi < 0.04893234|t) = 0.5$$
+Since,
+
+$$\psi = \frac{1-2\pi}{1-\pi}$$
+$$\pi = \frac{1-\psi}{2-\psi}$$
+We can express $\pi$ as:
+
+$$P(\frac{1-\psi}{2-\psi} < 0.04893234|t) = 0.5$$
+And then isolate $\psi$ to determine the posterior median of $\psi$.
+
+Similarly for the Bayesian interval for $\psi$, we can express $\pi$ in terms of $\psi$: 
+
+\begin{align*}
+  P(a \leq \pi \leq b \mid t) = 0.95 \\
+  P\left( \frac{1 - 2b}{1 - b} \leq \psi \leq \frac{1 - 2a}{1 - a} \mid t \right) = 0.95 
+\end{align*}
+
+### Bayesian P-Value
+
+Per FDA guidelines, $\psi$ must be at least 30% for vaccine approval. Using hypothesis testing as shown, 
+
+$$H_0: \psi = 30%$$
+$$H_1: \psi \neq 30%$$
+
+We calculate the posterior probability $P(\psi \leq 0.3 |t)$ by modeling $\psi$, and using the posterior distribution of $\psi$.
+
+\begin{align*}
+  P(\psi \leq 0.3 |t) \\
+  P(\frac{1-2\pi}{1-\pi} \leq 0.3 |t) \\
+  P(\pi \leq \frac{7}{17}) 
+\end{align*}
+
+Then, the p-value can be determined as the probability of observing a value less than or $\frac{7}{17}$ for $\pi$. 
+
+
+
+
+
+
+
+
+
+
