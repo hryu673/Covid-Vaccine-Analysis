@@ -181,7 +181,10 @@ The Pfizer report does not apply likelihood inference methods like the ones we c
 We can conclude that the vaccine would pass the FDA's requirements and be approved for use. 
 
 # 7) References
+Grove, R. "Chapter 12: Likelihood Inference." Stat 342. 
+
 Polack, F. P., Thomas, S. J., Kitchin, N., Absalon, J., Gurtman, A., Lockhart, S., Perez, J. L., Pérez Marc, G., Moreira, E. D., Zerbini, C., Bailey, R., Swanson, K. A., Roychoudhury, S., Koury, K., Li, P., Kalina, W. V., Cooper, D., Frenck, R. W., Hammitt, L. L., … Gruber, W. C. (2020). Safety and efficacy of the BNT162B2 mrna covid-19 vaccine. New England Journal of Medicine, 383(27), 2603–2615. https://doi.org/10.1056/nejmoa2034577 
+
 
 # 8) Appendix 
 8.1) Extended Calculation for $\pi$ in Terms of $\psi$
