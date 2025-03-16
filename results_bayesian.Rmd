@@ -1,0 +1,29 @@
+---
+title: "Results"
+output: pdf_document
+date: "2025-03-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 5.2 Bayesian 
+
+Based on the posterior median value of $\pi$,
+
+$$P(\psi < 0.94855|t) = 0.5$$
+
+we computed $\psi_{median}$ to be 0.94855, which is our point estimate for $\psi$. We computed the Bayesian interval for $\pi$ [a,b], which was [2.2319402%, 8.799074%], and used it to calculate the interval for $\psi$:
+
+$$P( \frac{1 - 2b}{1 - b} \leq \psi \leq \frac{1 - 2a}{1 - a})$$
+
+Using this, we calculated the Bayesian credible interval for $\psi$ to be [90.35%, 97.5%]. We also determined that the vaccine efficacy rate ($\psi$) exceeds the FDA threshold of 30% 
+
+$$P(\pi \leq \frac{7}{17}) = 1.960014e-28$$
+
+
+
+
+
+
