@@ -1,0 +1,12 @@
+---
+title: "abstract"
+output: html_document
+date: "2025-03-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## abstrct
+In this paper, we will be analyzing the probability ($\psi$) that BNT162b2 vaccine reduce the risk of getting COVID-19. We use the following two methods: maximum likelihood estimation and Bayesian estimation. From calculating our maximum likelihood estimator and Bayesian estimator, we get the results similar to the 95% confidence interval from the paper itself ([0.903, 0.976]). We also calculated the P-Values from both of these estimators and got values of approximately zero, meaning that in the hypothesis test of $H_0$: $\psi_0$ = 0.3 vs. $H_1$: $\psi_0$ > 0.3 (Bayesian) & $H_1$: $\psi_0$ $\neq$ 0.3 (likelihood) to see if the FDA would approve the vaccine. In the end, we rejected the null hypothesis as both P-Values are small enough, meaning that the BNT162b2 vaccine would be approved by the FDA for general use.
