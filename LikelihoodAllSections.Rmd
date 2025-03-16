@@ -11,7 +11,7 @@ library(fastR2)
 ```
 
 # 4) Statisical Methods 
-In this study, we applied two main statistical methods, Likelihood and Bayesian inference, to analyse our parameter of interest. Our parameter of interest is the vaccine efficacy rate of the BNT162b2 vaccine for the Covid-19 virus, denoted $\psi$ for this paper. Vaccine efficacy is the percentage decrease in the chance of being infected by Covid-19 given the vaccine compared to the placebo group. The FDA requires an efficacy rate of at least 30% before vaccines can be approved. Our data is from Pfizer and BioNTech, the producers of the vaccine. 
+In this study, we applied two main statistical methods, Likelihood and Bayesian inference, to analyse our parameter of interest. Our parameter of interest is the vaccine efficacy rate of the BNT162b2 vaccine for the Covid-19 virus, denoted $\psi$ for this paper. Vaccine efficacy is the percentage decrease in the chance of being infected by Covid-19 given the vaccine compared to the placebo group. The FDA requires an efficacy rate of at least 30% before vaccines can be authorized for use, thus the goal of this analysis is to determine if the efficacy rate of the BNT162b2 vaccine sufficiently meets this requirement. Our data is from Pfizer and BioNTech, the producers of the BNT162b2 vaccine.
 
 \begin{table}[h!]
 \centering
@@ -33,7 +33,7 @@ Where $\pi$ denotes the probability of an infected patient being from the vaccin
 Where $\pi_v$ and $\pi_p$ are the probability of a patient being from the vaccine or placebo group, respectively. Additionally, $n_v$ and $n_p$ are the number of infected patients from the vaccine and placebo group, respectively. Since $n_v \approx n_p$, the randomization is 1:1, meaning we can express the function as:
 $$\pi =  \frac{\pi_v }{\pi_v  - \pi_p}$$
 Our parameter of interest, the vaccine efficacy, is given by $\psi = 1 - \frac{\pi_v}{\pi_p} = \frac{\pi_p - \pi_v}{\pi_p}$. Note that the range of $\psi = (-\infty, 1)$. Our efficacy formula is also given in terms of $\pi$: $$\psi = \frac{1-2\pi}{1-\pi}$$
-Note that $\pi$ can then be written in terms of $\psi$\footnote{See appendix 8.1 for calculations.}.
+Note that $\pi$ can then be written in terms of $\psi$.\footnote{See appendix 8.1 for calculations.}
 \begin{align*}
 \pi &= \frac{\psi - 1}{\psi - 2}
 \end{align*} 
@@ -66,15 +66,15 @@ This value is a possible maximum of our log-likelihood function. The second deri
 \frac{d^2}{d\psi^2} \ell\left(\psi = \frac{n - 2t}{n - t}\right) &= \frac{d^2}{d\psi^2} \ell \left(\frac{170 - 2(8)}{170 - 8} \right) =   \frac{-8}{\left(\left(\frac{154}{162}\right) - 1\right)^2} + \frac{170}{{ \left(2 - \left(\frac{154}{162}\right)\right)^2}} = -3126.124
 \end{align*}
 Thus our critical point is a local maximum. Thus:
-$$\hat{\psi}^{mle} = \frac{n - 2T}{n - T}$$
+$$\hat{\psi}^{mle}_0 = \frac{n - 2T}{n - T}$$
 
 **The Large Sample Confidence Interval**  
 Based on Theorem 12.1 \footnote{ Slide deck "likelihood-inference" from Stat 342, Grove, Ranjini}, the 95% large confidence interval of $\hat{\psi}^{mle}$, under certain regularity conditions, is equal to:
-$$\hat{\psi}^{mle} \pm z_{0.975} \sqrt{\frac{1}{n\:I(\hat{\psi}^{mle})}}$$
+$$\hat{\psi}^{mle}_0 \pm z_{0.975} \sqrt{\frac{1}{n\:I(\hat{\psi}^{mle}_0)}}$$
 Where $I(\hat{\psi}^{mle})$ is the expected Fisher Information, equal to:
-$$I(\hat{\psi}^{mle}) = E\left[\frac{-d^2}{d\psi^2} ln(f_{\psi}(t))\right]_{\psi = \hat{\psi}^{mle}}  = \frac{n\pi}{\psi - 1} - \frac{n}{2-\psi} = \frac{t}{\psi - 1} - \frac{n}{2-\psi}$$
-Where $\pi$ is the rate of vaccine patients given that $\psi = \hat{\psi}^{mle}$. Our large sample confidence interval is then:
-$$\hat{\psi}^{mle} \pm z_{0.975} \sqrt{\frac{1}{\frac{t}{\hat{\psi}^{mle} - 1} - \frac{n}{2-\hat{\psi}^{mle}}}}$$ 
+$$I(\hat{\psi}^{mle}_0) = E\left[\frac{-d^2}{d\psi^2} ln(f_{\psi}(t))\right]_{\psi = \hat{\psi}^{mle}_0}  = \frac{n\pi}{\psi - 1} - \frac{n}{2-\psi} = \frac{t}{\psi - 1} - \frac{n}{2-\psi}$$
+Where $\pi$ is the rate of vaccine patients given that $\psi = \hat{\psi}^{mle}_0$. Our large sample confidence interval is then:
+$$\hat{\psi}^{mle}_0 \pm z_{0.975} \sqrt{\frac{1}{\frac{t}{\hat{\psi}^{mle}_0 - 1} - \frac{n}{2-\hat{\psi}^{mle}_0}}}$$ 
 The key regularity and size assumptions we must consider are\footnote{Slide deck "likelihood-inference" from Stat 342, Grove, Ranjini}:
 
 1) The possible values of $t$ are not dependent on the parameter $\psi$, which is true since the possible values of $t$ relies on the size of the binomial.
@@ -101,7 +101,7 @@ The empirical p-value was calculated based on a large number of randomly generat
 # 5 Results 
 ## 5.1 Results from Likelihood Methods  
 The maximum-likelihood estimate of the parameter $\psi$ given the data is approximately 0.9506, based on the equations in section 4.1.  
-$$\hat{\psi}^{mle} = \frac{154}{162} \approx 0.9506$$
+$$\hat{\psi}^{mle}_0= \frac{154}{162} \approx 0.9506$$
 And the 95% large sample confidence interval (the Wald Confidence Interval) is:
 $$0.9506 \pm z_{0.975} \sqrt{\frac{1}{\frac{8}{0.9506 - 1} - \frac{170}{2-0.9506}}} \approx \big[0.9156, 0.9857\big]$$
 Second-order approximation plot\footnote{See appendix 8.x for R code.}:
@@ -118,22 +118,25 @@ loglik.binom <- function(psi, x, n){
 ml.binom <- maxLik2(loglik=loglik.binom,
                     start = 0.3, x = 8, n = 170)
 
-plot(ml.binom) +
+plot(ml.binom) + 
   labs(x = expression(psi),
-       title = "Second Order Taylor approximation to Binomial t = 8, n = 170")
+       title = "Second Order Taylor approximation to Binomial t = 8, n = 170") 
 ```
+\begin{center}
+\text{Plot X: Second-order approximation plot}
+\end{center}
 
 
 The Bootstrap percentile 95% confidence interval is [0.9102564	0.9820359]\footnote{See appendix 8.x for R code}. 
 
-For our p-value based on the Likelihood Ratio Test Statistic, the value of test statistic, given that $\hat{\psi}^{mle} = \frac{154}{162}$, is $W \approx 121.6012$ and our p-value was \footnote{See appendix 8.x for R code.}:
+For our p-value based on the Likelihood Ratio Test Statistic, the value of test statistic, given that $\hat{\psi}^{mle}_0 = \frac{154}{162}$, is $W \approx 121.6012$ and our p-value was \footnote{See appendix 8.x for R code.}:
 $$W = 2ln\left(\frac{L(\hat{\psi}_0)}{L({\psi}_0^{null} = 0.3)} \right)\approx121.6012 \sim \chi^2_1$$
 $$P(W \geq 121.6012) = 2.822294 \times 10^{-28}$$
 
 The empirical p-value generated from a random sample\footnote{See appendix 8.x for R code.} was equal to 0, meaning out of the 1500 samples based on the null hypothesis, there were no samples that had a test statistic as significant or more than the one we obtained from the data. 
 
 # 8 Appendix 
-8.x) Extended Calculation for $\pi$ in Terms of $\psi$
+8.1) Extended Calculation for $\pi$ in Terms of $\psi$
 \begin{align*}
 \psi &= \frac{1-2\pi}{1-\pi}\\
 \psi - \pi \cdot\ \psi &= 1-2\pi\\
