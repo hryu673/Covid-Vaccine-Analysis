@@ -12,14 +12,14 @@ library(ggplot2)
 ```
 
 # 1) Abstract 
-    In this paper, we applied Likelihood and Bayesian methods of statistical analysis to analyse our parameter of interest, the vaccine efficacy rate of the BNT162b2 vaccine for the COVID-19 virus, denoted $\psi$ for this paper. The experimental data is from Pfizer and BioNTech, the producers of the vaccine. Vaccine efficacy is the percentage decrease in the chance of being infected given the vaccine compared to the placebo group and the FDA requires a vaccine efficacy rate of at least 30% for vaccines to be approved for general use. We used the maximum likelihood estimate, likelihood ratio p-value, Wald confidence interval, and a bootstrapped interval for the likelihood analysis. We approached the data using a Bayesian framework as well, computing a Bayesian credible interval and hypothesis testing. Using both methods, we found significant evidence to support that the vaccine efficacy exceeds the 30% threshold, meaning that the BNT162b2 vaccine would be approved by the FDA for general use.
+In this paper, we applied Likelihood and Bayesian methods of statistical analysis to analyse our parameter of interest, the vaccine efficacy rate of the BNT162b2 vaccine for the COVID-19 virus, denoted $\psi$ for this paper. The experimental data is from Pfizer and BioNTech, the producers of the vaccine. Vaccine efficacy is the percentage decrease in the chance of being infected given the vaccine compared to the placebo group and the FDA requires a vaccine efficacy rate of at least 30% for vaccines to be approved for general use. We used the maximum likelihood estimate, likelihood ratio p-value, Wald confidence interval, and a bootstrapped interval for the likelihood analysis. We approached the data using a Bayesian framework as well, computing a Bayesian credible interval and hypothesis testing. Using both methods, we found significant evidence to support that the vaccine efficacy exceeds the 30% threshold, meaning that the BNT162b2 vaccine would be approved by the FDA for general use.
 
 # 2) Keywords
 BNT162b2 Vaccine, COVID-19 Vaccine, Vaccine Efficacy, Maximum Likelihood Estimation, Bayesian Estimation
 
 
 # 3) Introduction 
-  COVID-19 is a contagious disease caused by the coronavirus SARS-CoV-2. Several COVID-19 vaccines have been approved and distributed in various countries, many of which have initiated mass vaccination campaigns. In December 2020, Pfizer and BioNTech successfully obtained a US FDA Emergency Use Authorization (EUA) to begin distributing their two-dose vaccine, BNT162b2. BNT162b2 utilizes mRNA technology to stimulate an immune response. About 649 million doses of the Pfizer–BioNTech COVID-19 vaccine, including about 55 million doses in children and adolescents (below 18 years of age) were administered in the EU/EEA from authorization to 26 June 2022. To this day, there are still some people still question the effectiveness of the vaccine. The FDA requires at least 30% vaccine efficacy for a vaccine to be approved. Vaccine efficacy is the percentage reduction of the risk of getting COVID-19 give the vaccine compared to the placebo group.
+COVID-19 is a contagious disease caused by the coronavirus SARS-CoV-2. Several COVID-19 vaccines have been approved and distributed in various countries, many of which have initiated mass vaccination campaigns. In December 2020, Pfizer and BioNTech successfully obtained a US FDA Emergency Use Authorization (EUA) to begin distributing their two-dose vaccine, BNT162b2. BNT162b2 utilizes mRNA technology to stimulate an immune response. About 649 million doses of the Pfizer–BioNTech COVID-19 vaccine, including about 55 million doses in children and adolescents (below 18 years of age) were administered in the EU/EEA from authorization to 26 June 2022. To this day, there are still some people still question the effectiveness of the vaccine. The FDA requires at least 30% vaccine efficacy for a vaccine to be approved. Vaccine efficacy is the percentage reduction of the risk of getting COVID-19 give the vaccine compared to the placebo group.
 The experiment is a placebo-controlled, double-blinded randomized trial, enrolling participants aged 16 and older. Participants were randomly assigned in a 1:1 ratio to receive either two doses of BNT162b2 or a placebo, administered 21 days apart. The primary efficacy endpoint was laboratory-confirmed COVID-19 infection, with a total of 170 cases observed across the study groups. 
 
 \begin{table}[h!]
@@ -135,7 +135,7 @@ The empirical p-value was calculated based on a large number of randomly generat
 
 ## 4.2 Bayesian Inference
 
-# 5 Results 
+# 5) Results 
 ## 5.1 Results from Likelihood Methods  
 The maximum-likelihood estimate of the parameter $\psi$ given the data is approximately 0.9506, based on the equations in section 4.1.  
 $$\hat{\psi}^{mle}_0= \frac{154}{162} \approx 0.9506$$
@@ -159,3 +159,111 @@ plot(ml.binom) +
   labs(x = expression(psi),
        title = "Second Order Taylor approximation to Binomial t = 8, n = 170") 
 ```
+\begin{center}
+\text{Plot X: Second-order approximation plot}
+\end{center}
+
+
+The Bootstrap percentile 95% confidence interval is [0.9102564	0.9820359]\footnote{See appendix 8.x for R code}. 
+
+For our p-value based on the Likelihood Ratio Test Statistic, the value of test statistic, given that $\hat{\psi}^{mle}_0 = \frac{154}{162}$, is $W \approx 121.6012$ and our p-value was \footnote{See appendix 8.x for R code.}:
+$$W = 2ln\left(\frac{L(\hat{\psi}_0)}{L({\psi}_0^{null} = 0.3)} \right)\approx121.6012 \sim \chi^2_1$$
+$$P(W \geq 121.6012) = 2.822294 \times 10^{-28}$$
+
+The empirical p-value generated from a random sample\footnote{See appendix 8.x for R code.} was equal to 0, meaning out of the 1500 samples based on the null hypothesis, there were no samples that had a test statistic as significant or more than the one we obtained from the data. 
+
+# 6) Discussion
+The p-value based on the likelihood ration test statistic $2.822294 \times 10^{-28}$, a near-zero value. The empirical p-value was exactly zero, meaning the probability of getting a set of data as significant or more than the original data set given that the parameters of the null hypothesis are true is zero, or near-zero. At a significance level of 0.05, we reject the null hypothesis that states that the true value of $\psi_0 = 0.3$ and accept the alternative, $\psi_0 \neq 0.3$. 
+
+The Wald confidence interval, [0.9156, 0.9857] captures with 95% confidence the true value of $\psi_0$. The bootstrapped interval is [0.9102564	0.9820359]. Neither the boot-strapped or Wald confidence interval contains the value 0.3, meaning we can conclude that the true value of $\psi_0$ is likely not 0.3. 
+The Pfizer report does not apply likelihood inference methods like the ones we chose to use for this paper. However, the results of our likelihood methods are exceptionally similar to Pfizer's, as reported by Polack et al., who report that "A two-dose regimen of BNT162b2 (30 $\mu$g per dose, given 21 days apart) was found to be safe and 95% effective against Covid-19,"\footnote{Polack et al.} which is similar to the most likely estimate of the vaccine efficacy we found. The strengths of using frequentist methods of analysis, like maximum likelihood, stems from the consistency of convergence when dealing with large sample sizes. When dealing with large sample sizes, like the number of COVID-19 infections in this dataset, maximum likelihood estimates typically offers a high precision estimate of true values. Possible downfalls of this type of analysis is the assumptions made on the distribution of our data.
+
+We can conclude that the vaccine would pass the FDA's requirements and be approved for use. 
+
+# 7) References
+Polack, F. P., Thomas, S. J., Kitchin, N., Absalon, J., Gurtman, A., Lockhart, S., Perez, J. L., Pérez Marc, G., Moreira, E. D., Zerbini, C., Bailey, R., Swanson, K. A., Roychoudhury, S., Koury, K., Li, P., Kalina, W. V., Cooper, D., Frenck, R. W., Hammitt, L. L., … Gruber, W. C. (2020). Safety and efficacy of the BNT162B2 mrna covid-19 vaccine. New England Journal of Medicine, 383(27), 2603–2615. https://doi.org/10.1056/nejmoa2034577 
+
+# 8) Appendix 
+8.1) Extended Calculation for $\pi$ in Terms of $\psi$
+\begin{align*}
+\psi &= \frac{1-2\pi}{1-\pi}\\
+\psi - \pi \cdot\ \psi &= 1-2\pi\\
+- \pi \cdot\ \psi + 2\pi &= 1 - \psi\\
+\pi &= \frac{1 - \psi}{2 - \psi}\\
+\pi &= \frac{\psi - 1}{\psi - 2}
+\end{align*}
+
+8.x) Code Second-Order Plot
+```{r, warning = T, eval = F}
+loglik.binom <- function(psi, x, n){ 
+  if (psi >= 1) {
+    return(NA)
+  }
+  pi <- (psi - 1) / (psi - 2)
+  return(log(choose(n, x)) + x*log(pi) + (n-x)*log(1-pi))
+}
+
+ml.binom <- maxLik2(loglik=loglik.binom,
+                    start = 0.3, x = 8, n = 170)
+
+plot(ml.binom) +
+  labs(x = expression(psi),
+       title = "Second Order Taylor approximation to Bernulli t = 8, n = 170")
+```
+
+8.x) Code for Bootstrap Interval 
+```{r, eval = F}
+set.seed(123)
+pi_mle <- 8/170
+boot1 <- tibble(
+  psi_mle = replicate(1000, expr = {
+    samples <- rbinom(1, 170, pi_mle)
+    est_psi <- (170-2*samples)/(170-samples)
+    return(est_psi)
+  })
+)
+
+boot1 %>% summarise(lower = quantile(psi_mle, 0.025),
+                    upper = quantile(psi_mle, 0.975))
+```
+
+8.x) Code for Calculating the Likelihood ratio P-Value
+```{r, eval = F}
+# likelihood function values 
+psi_mle <- 154/162
+psi_null <- 0.3
+pi1 <- (psi_mle-1)/(psi_mle-2)
+pi2 <- (psi_null-1)/(psi_null-2)
+w <- 2 * log(dbinom(8, 170, pi1)/dbinom(8, 170, pi2))
+
+lr_p_value <- pchisq(w, df = 1, lower.tail = FALSE ) # output = 2.822294e-28
+```
+
+8.x) Code for Generating the Empirical P-Value
+```{r, eval = F}
+# Here is the log.lik of the binomial based on psi for reference
+loglik.binom <- function(psi, x, n){ 
+  if (psi >= 1) {
+    return(NA)
+  }
+  pi <- (psi - 1) / (psi - 2)
+  return(log(choose(n, x)) + x*log(pi) + (n-x)*log(1-pi))
+}
+
+# set seed for reproducibility 
+set.seed(101)
+w_vec <- c()
+B <- 1500
+psi_null <- 0.3
+pi <- (psi_null-1)/(psi_null-2)
+
+for(i in 1:B) {
+  sample <- rbinom(1, size = 170, prob = pi)
+  w_vec[i] <- (2 * loglik.binom(psi_mle, x = sample, n = 170)) - 
+    (2 * loglik.binom(0.3, x = sample, n = 170))
+}
+
+# emp p-value
+emp_p_value <- mean(w_vec >= w) # output = 0
+```
+
