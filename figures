@@ -1,0 +1,16 @@
+#Bayesian plot
+
+library(ggplot2)
+
+ggplot() + geom_function(fun = dbeta, 
+                         mapping = aes(color = "prior"),
+                         args = list(shape1 = 0.700102, shape2 = 1),
+                         xlim = c(0,0.3)) +
+  geom_function(fun = dbeta,
+                mapping = aes(color = "posterior"),
+                args = list(shape1 = 8.700102, shape2 = 163),
+                xlim = c(0,0.3) ) +
+  scale_color_manual(name = "dist", values = c("blue", "red")) +
+  labs(title = "Binomial w/ Beta prior",
+       subtitle = "Based on placebo + vaccine data",
+       x = expression(pi), y = "PDF") 
