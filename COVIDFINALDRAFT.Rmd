@@ -303,9 +303,14 @@ The Pfizer report uses a Bayesian beta-binomial model to determine the 95% credi
 We can conclude that the vaccine would pass the FDA's requirements and be approved for use. 
 
 # 7. References
-Grove, R. "Chapter 12: Likelihood Inference." Stat 342. 
+C4591001 Clinical Trial Group(2021). Safety and Efficacy of the BNT162b2 mRNA Covid-19 Vaccine through 6 Months. *The New England Journal of Medicine*, 385(19).
+https://www.nejm.org/doi/full/10.1056/NEJMoa2110345
 
-Polack, F. P., Thomas, S. J., Kitchin, N., Absalon, J., Gurtman, A., Lockhart, S., Perez, J. L., Pérez Marc, G., Moreira, E. D., Zerbini, C., Bailey, R., Swanson, K. A., Roychoudhury, S., Koury, K., Li, P., Kalina, W. V., Cooper, D., Frenck, R. W., Hammitt, L. L., … Gruber, W. C. (2020). Safety and efficacy of the BNT162B2 mrna covid-19 vaccine. New England Journal of Medicine, 383(27), 2603–2615. https://doi.org/10.1056/nejmoa2034577 
+WikiPedia.*Pfizer–BioNTech COVID-19 vaccine*. Retrieved from https://en.wikipedia.org/wiki/Pfizer%E2%80%93BioNTech_COVID-19_vaccine
+
+Grove, R. *Chapter 12: Likelihood Inference*, Stat 342. 
+
+Polack, F. P., Thomas, S. J., Kitchin, N., Absalon, J., Gurtman, A., Lockhart, S., Perez, J. L., Pérez Marc, G., Moreira, E. D., Zerbini, C., Bailey, R., Swanson, K. A., Roychoudhury, S., Koury, K., Li, P., Kalina, W. V., Cooper, D., Frenck, R. W., Hammitt, L. L., … Gruber, W. C. (2020). Safety and efficacy of the BNT162B2 mrna covid-19 vaccine. *New England Journal of Medicine*, 383(27), 2603–2615. https://doi.org/10.1056/nejmoa2034577 
 
 
 # 8. Appendix 
