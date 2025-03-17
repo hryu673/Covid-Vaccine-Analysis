@@ -11,14 +11,14 @@ library(fastR2)
 library(ggplot2)
 ```
 
-# 1) Abstract 
+# 1. Abstract 
 In this paper, we applied Likelihood and Bayesian methods of statistical analysis to analyse our parameter of interest, the vaccine efficacy rate of the BNT162b2 vaccine for the COVID-19 virus, denoted $\psi$ for this paper. The experimental data is from Pfizer and BioNTech, the producers of the vaccine. Vaccine efficacy is the percentage decrease in the chance of being infected given the vaccine compared to the placebo group and the FDA requires a vaccine efficacy rate of at least 30% for vaccines to be approved for general use. We used the maximum likelihood estimate, likelihood ratio p-value, Wald confidence interval, and a bootstrapped interval for the likelihood analysis. We approached the data using a Bayesian framework as well, computing a Bayesian credible interval and hypothesis testing. Using both methods, we found significant evidence to support that the vaccine efficacy exceeds the 30% threshold, meaning that the BNT162b2 vaccine would be approved by the FDA for general use.
 
-# 2) Keywords
+# 2. Keywords
 BNT162b2 Vaccine, COVID-19 Vaccine, Vaccine Efficacy, Maximum Likelihood Estimation, Bayesian Estimation
 
 
-# 3) Introduction 
+# 3. Introduction 
 COVID-19 is a contagious disease caused by the coronavirus SARS-CoV-2. Several COVID-19 vaccines have been approved and distributed in various countries, many of which have initiated mass vaccination campaigns. In December 2020, Pfizer and BioNTech successfully obtained a US FDA Emergency Use Authorization (EUA) to begin distributing their two-dose vaccine, BNT162b2. BNT162b2 utilizes mRNA technology to stimulate an immune response. About 649 million doses of the Pfizer–BioNTech COVID-19 vaccine, including about 55 million doses in children and adolescents (below 18 years of age) were administered in the EU/EEA from authorization to 26 June 2022. To this day, there are still some people still question the effectiveness of the vaccine. The FDA requires at least 30% vaccine efficacy for a vaccine to be approved. Vaccine efficacy is the percentage reduction of the risk of getting COVID-19 give the vaccine compared to the placebo group.
 The experiment is a placebo-controlled, double-blinded randomized trial, enrolling participants aged 16 and older. Participants were randomly assigned in a 1:1 ratio to receive either two doses of BNT162b2 or a placebo, administered 21 days apart. The primary efficacy endpoint was laboratory-confirmed COVID-19 infection, with a total of 170 cases observed across the study groups. 
 
@@ -34,7 +34,7 @@ Total & 170 & 34,922 \\
 after second dose in patients without evidence of infection, from Pfizer and BioNTech}
 \end{table}
 
-```{r echo=FALSE}
+```{r echo=FALSE, fig.cap = "Figure 1: Barplot of Infection Percentages for Vaccinated (BNT162b2) and Placebo Groups"}
 groups <- c("BNT162b2", "Placebo")
 cases <- c(8, 162)
 sample_sizes <- c(17411, 17511)
@@ -53,13 +53,11 @@ ggplot(df, aes(x = Group, y = Percentage, fill = Category)) +
   ylab("Percentage") +
   theme_minimal()
 ```
+
 Given the significance of this vaccine in controlling the pandemic, our report aims to analyze the clinical trial data using both Bayesian and Frequentist statistical methods. Statistical models assessing vaccine efficacy play a crucial role in guiding public health decisions. The evaluation of Pfizer’s clinical trial data through alternative statistical frameworks help reinforce confidence in the robustness of vaccine efficacy estimates and their implications for global vaccination strategies.
 The goal of our report is to critically assess the statistical modeling in clinical trials and to understand how different methods may influence public health decision-making.
-```{r label="important_R_code", eval=TRUE, echo=FALSE}
-# You can reference your code in the appendix (sample here).
-```
 
-# 4) Statisical Methods 
+# 4. Statisical Methods 
 In this study, we applied two main statistical methods, Likelihood and Bayesian inference, to analyse our parameter of interest. Our parameter of interest is the vaccine efficacy rate of the BNT162b2 vaccine for the COVID-19 virus, denoted $\psi$ for this paper. Vaccine efficacy is the percentage decrease in the chance of being infected by COVID-19 given the vaccine compared to the placebo group. The FDA requires an efficacy rate of at least 30% before vaccines can be authorized for use, thus the goal of this analysis is to determine if the efficacy rate of the BNT162b2 vaccine sufficiently meets this requirement. Our data is from Pfizer and BioNTech, the producers of the BNT162b2 vaccine.
 
 ## 4.1 Likelihood Inference  
@@ -140,21 +138,15 @@ Another point of reference can be done using Bayesian inference. We analyze our 
 Vaccine efficacy, previously defined as: 
 
 $$\psi = \frac{\pi_p - \pi_v}{\pi_p}$$
-Where:
-
-  - $\pi_v$ is the probability of infection in the vaccine group
-  - $\pi_p$ is the proabability of infection in the placebo group
-  
-And using the reparametrization representing the infections occurring in the vaccine group relative to both groups:
+Where $\pi_v$ is the probability of infection in the vaccine group and $\pi_p$ is the proabability of infection in the placebo group. Using the reparametrization representing the infections occurring in the vaccine group relative to both groups:
 $$\pi = \frac{\pi_v}{\pi_v + \pi_p}$$
 
 Recall that we model the total number of infections across both groups as:
 
 $$T \sim Binom(n = 170, \pi)$$
-Where:
 
-  - T = 8 (number of infections in the vaccine group)
-  - n = 170 (total infections in both groups)
+
+Where T = 8 (number of infections in the vaccine group) and n = 170 (total infections in both groups)
 
 The prior for $\pi$ is defined as ($\alpha_0$ and $\beta_0$ established from previous studies):
 
@@ -186,8 +178,9 @@ ggplot() + geom_function(fun = dbeta,
        subtitle = "Based on placebo + vaccine data",
        x = expression(pi), y = "PDF") 
 ```
-
-
+\begin{center}
+\text{Figure 2: Prior and posterior distributions of pi}
+\end{center}
 
 ### Point estimate for $\pi$ (Median):
 We compute the posterior median of $\pi$ as a point estimate, which is calculated numerically \footnote{using qbeta()}:
@@ -247,7 +240,8 @@ We calculate the posterior probability $P(\psi \leq 0.3 |t)$ by modeling $\psi$,
 
 Then, the p-value can be determined as the probability of observing a value less than or $\frac{7}{17}$ for $\pi$. 
 
-# 5) Results 
+
+# 5. Results 
 ## 5.1 Results from Likelihood Methods  
 The maximum-likelihood estimate of the parameter $\psi$ given the data is approximately 0.9506, based on the equations in section 4.1.  
 $$\hat{\psi}^{mle}_0= \frac{154}{162} \approx 0.9506$$
@@ -272,34 +266,34 @@ plot(ml.binom) +
        title = "Second Order Taylor approximation to Binomial t = 8, n = 170") 
 ```
 \begin{center}
-\text{Plot X: Second-order approximation plot}
+\text{Figure 3: Second-order approximation plot}
 \end{center}
 
 
-The Bootstrap percentile 95% confidence interval is [0.9102564	0.9820359]\footnote{See appendix 8.x for R code}. 
+The Bootstrap percentile 95% confidence interval is [0.9102564	0.9820359]\footnote{See appendix 8.3 for R code}. 
 
-For our p-value based on the Likelihood Ratio Test Statistic, the value of test statistic, given that $\hat{\psi}^{mle}_0 = \frac{154}{162}$, is $W \approx 121.6012$ and our p-value was \footnote{See appendix 8.x for R code.}:
+For our p-value based on the Likelihood Ratio Test Statistic, the value of test statistic, given that $\hat{\psi}^{mle}_0 = \frac{154}{162}$, is $W \approx 121.6012$ and our p-value was \footnote{See appendix 8.4 for R code.}:
 $$W = 2ln\left(\frac{L(\hat{\psi}_0)}{L({\psi}_0^{null} = 0.3)} \right)\approx121.6012 \sim \chi^2_1$$
 $$P(W \geq 121.6012) = 2.822294 \times 10^{-28}$$
 
-The empirical p-value generated from a random sample\footnote{See appendix 8.x for R code.} was equal to 0, meaning out of the 1500 samples based on the null hypothesis, there were no samples that had a test statistic as significant or more than the one we obtained from the data. 
+The empirical p-value generated from a random sample\footnote{See appendix 8.5 for R code.} was equal to 0, meaning out of the 1500 samples based on the null hypothesis, there were no samples that had a test statistic as significant or more than the one we obtained from the data. 
 
 ## 5.2 Results from Bayesian Inference
 
-Based on the posterior median value of $\pi$\footnote{See appendix 8.x for R code.},
+Based on the posterior median value of $\pi$\footnote{See appendix 8.6 for R code.},
 
 $$P(\psi < 0.94855|t) = 0.5$$
 
-we computed $\psi_{median}$ to be 0.94855, which is our point estimate for $\psi$. We computed the Bayesian interval for $\pi$ [a,b], which was [2.2319402%, 8.799074%]\footnote{See appendix 8.x for R code.}, and used it to calculate the interval for $\psi$:
+we computed $\psi_{median}$ to be 0.94855, which is our point estimate for $\psi$. We computed the Bayesian interval for $\pi$ [a,b], which was [2.2319402%, 8.799074%]\footnote{See appendix 8.7 for R code.}, and used it to calculate the interval for $\psi$:
 
 $$P( \frac{1 - 2b}{1 - b} \leq \psi \leq \frac{1 - 2a}{1 - a})$$
 
-Using this, we calculated the Bayesian credible interval for $\psi$ to be [90.35%, 97.6%]\footnote{See appendix 8.x for R code.}. We also determined that the vaccine efficacy rate ($\psi$) exceeds the FDA threshold of 30%. 
+Using this, we calculated the Bayesian credible interval for $\psi$ to be [90.35%, 97.6%]\footnote{See appendix 8.8 for R code.}. We also determined that the vaccine efficacy rate ($\psi$) exceeds the FDA threshold of 30%. 
 
 $$P(\psi \leq 0.3) = P(\pi \geq \frac{7}{17}) = 1.960014e-28$$
-From this, we can state that the probability of $\psi$ being greater than 30% is $1-p$, which is greater than 99%\footnote{See appendix 8.x for R code.}.
+From this, we can state that the probability of $\psi$ being greater than 30% is $1-p$, which is greater than 99%\footnote{See appendix 8.9 for R code.}.
 
-# 6) Discussion
+# 6. Discussion
 The p-values for hypothesis testing under both the likelihood estimation and Bayesian framework were $2.822294 \times 10^{-28}$ and $1.960014 \times 10^{-28}$ , near-zero values. The empirical p-value was exactly zero, meaning the probability of getting a set of data as significant or more than the original data set given that the parameters of the null hypothesis are true is zero, or near-zero. For both approaches, at a significance level of $\alpha = 0.05$, we reject the null hypothesis that states that the true value of $\psi_0 = 0.3$ and accept the alternative, $\psi_0 \neq 0.3$. 
 
 The Wald confidence interval, [0.9156, 0.9857] captures with 95% confidence the true value of $\psi_0$. The bootstrapped interval is [0.9102564	0.9820359]. Neither the boot-strapped or Wald confidence interval contains the value 0.3, meaning we can conclude that the true value of $\psi_0$ is likely not 0.3. The Bayesian credible interval indicates that there is a 95% probability that the true value of $\psi$ lies in [0.904, 0.976]. 
@@ -308,13 +302,13 @@ The Pfizer report uses a Bayesian beta-binomial model to determine the 95% credi
 
 We can conclude that the vaccine would pass the FDA's requirements and be approved for use. 
 
-# 7) References
+# 7. References
 Grove, R. "Chapter 12: Likelihood Inference." Stat 342. 
 
 Polack, F. P., Thomas, S. J., Kitchin, N., Absalon, J., Gurtman, A., Lockhart, S., Perez, J. L., Pérez Marc, G., Moreira, E. D., Zerbini, C., Bailey, R., Swanson, K. A., Roychoudhury, S., Koury, K., Li, P., Kalina, W. V., Cooper, D., Frenck, R. W., Hammitt, L. L., … Gruber, W. C. (2020). Safety and efficacy of the BNT162B2 mrna covid-19 vaccine. New England Journal of Medicine, 383(27), 2603–2615. https://doi.org/10.1056/nejmoa2034577 
 
 
-# 8) Appendix 
+# 8. Appendix 
 8.1) Extended Calculation for $\pi$ in Terms of $\psi$
 \begin{align*}
 \psi &= \frac{1-2\pi}{1-\pi}\\
@@ -324,7 +318,7 @@ Polack, F. P., Thomas, S. J., Kitchin, N., Absalon, J., Gurtman, A., Lockhart, S
 \pi &= \frac{\psi - 1}{\psi - 2}
 \end{align*}
 
-8.x) Code Second-Order Plot
+8.2) Code Second-Order Plot
 ```{r, warning = T, eval = F}
 loglik.binom <- function(psi, x, n){ 
   if (psi >= 1) {
@@ -342,7 +336,7 @@ plot(ml.binom) +
        title = "Second Order Taylor approximation to Bernulli t = 8, n = 170")
 ```
 
-8.x) Code for Bootstrap Interval 
+8.3) Code for Bootstrap Interval 
 ```{r, eval = F}
 set.seed(123)
 pi_mle <- 8/170
@@ -358,7 +352,7 @@ boot1 %>% summarise(lower = quantile(psi_mle, 0.025),
                     upper = quantile(psi_mle, 0.975))
 ```
 
-8.x) Code for Calculating the Likelihood ratio P-Value
+8.4) Code for Calculating the Likelihood ratio P-Value
 ```{r, eval = F}
 # likelihood function values 
 psi_mle <- 154/162
@@ -370,7 +364,7 @@ w <- 2 * log(dbinom(8, 170, pi1)/dbinom(8, 170, pi2))
 lr_p_value <- pchisq(w, df = 1, lower.tail = FALSE ) # output = 2.822294e-28
 ```
 
-8.x) Code for Generating the Empirical P-Value
+8.5) Code for Generating the Empirical P-Value
 ```{r, eval = F}
 # Here is the log.lik of the binomial based on psi for reference
 loglik.binom <- function(psi, x, n){ 
@@ -398,7 +392,7 @@ for(i in 1:B) {
 emp_p_value <- mean(w_vec >= w) # output = 0
 ```
 
-8.x) Code for Generating Prior and Posterior Distributions of $\pi$
+8.6) Code for Generating Prior and Posterior Distributions of $\pi$
 ```{r, eval = F}
 library(ggplot2)
 
@@ -416,25 +410,25 @@ ggplot() + geom_function(fun = dbeta,
        x = expression(pi), y = "PDF") 
 ```
 
-8.x) Code for Calculating Posterior Median of $\pi$
+8.7) Code for Calculating Posterior Median of $\pi$
 ```{r, eval = F}
 alpha_posterior <- 8.700102
 beta_posterior <- 163
 posterior_median <- qbeta(0.5, alpha_posterior, beta_posterior)
 ```
 
-8.x) Code for Calculating Interval Estimate for $\pi$
+8.8) Code for Calculating Interval Estimate for $\pi$
 ```{r, eval = F}
 int <- qbeta(c(0.025,0.975), shape1 = 8.700102, shape2 = 163)
 ```
 
-8.x) Code for Calculating Interval Estimate for $\psi$
+8.9) Code for Calculating Interval Estimate for $\psi$
 ```{r, eval = F}
 upper <- (1 - 2*int[1])/(1-int[1])
 lower <- (1 - 2*int[2])/(1-int[2])
 ```
 
-8.x) Code for Bayesian p-value
+8.10) Code for Bayesian p-value
 ```{r, eval = F}
 alpha_prior <- 0.700102
 beta_prior <- 1
